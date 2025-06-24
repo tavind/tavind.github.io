@@ -1,6 +1,11 @@
-body {
+/* Reset default browser spacing */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   background-image: linear-gradient(to bottom, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29, #0b1c29);
   font-family: 'Plus Jakarta Sans', Arial, sans-serif;
   font-size: 12px;
@@ -10,6 +15,7 @@ body {
   width: 100%;
   background: #162c42;
   padding: 16px 0;
+  margin: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -42,6 +48,7 @@ body {
   overflow-x: hidden;
   box-shadow: 2px 0 8px rgba(0,0,0,0.06);
   z-index: 5;
+  margin: 0;
   padding-left: 0; /* removes any gap */
 }
 
