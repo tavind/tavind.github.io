@@ -11,8 +11,12 @@
 <body>
   <!-- Navigation bar -->
   <nav class="navbar">
-    <a href="about.html">About Me</a>
-    <a href="#" id="contactLink">Contact Me</a>
+    <a href="index.html" class="logo">T</a>
+    <a href="index.html">Home</a>
+    <a href="#projects">Projects</a>
+    <a href="about.html">About</a>
+    <a href="assets/Tavind_Kumar_CV.pdf" class="download-btn" download>Download CV</a>
+    <a href="#" id="contactLink">Contact</a>
   </nav>
   <!-- Contact modal -->
   <div id="contactModal" class="modal">
@@ -26,11 +30,26 @@
       </div>
     </div>
   </div>
+  <!-- Hero Section -->
+  <section class="hero">
+    <span class="badge">Hello, I'm Tavind 👋</span>
+    <h1 class="hero-title">Turning complex data into clear business decisions</h1>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#" id="contactHero" class="btn btn-outline">Contact</a>
+    </div>
+  </section>
+  <!-- Stats Ribbon -->
+  <section class="stats-ribbon">
+    <div class="stat"><span class="value">4 yrs</span> experience</div>
+    <div class="stat"><span class="value">USD 10B+</span> client portfolios</div>
+    <div class="stat"><span class="value">25% </span> churn cut</div>
+  </section>
   <!-- Main content -->
   <main class="content">
     <h1 class="page-title">My Data Analytics Projects</h1>
     <p class="subtitle">Below are some projects I've worked on.</p>
-    <section class="projects-grid">
+    <section id="projects" class="projects-grid">
       <!-- Example project cards -->
       <div class="project-card">
         <div class="project-title"><span class="proj-icon">📊</span> Project 1: Sales Dashboard</div>
