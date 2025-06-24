@@ -5,6 +5,8 @@
   <title>About Me | Tavind Kumar</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Only if you want special styles for about page, otherwise leave blank */
     .about-content {
@@ -39,7 +41,20 @@
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="about.html" style="color:#61dafb;">About Me</a>
+    <a href="#" id="contactLink">Contact Me</a>
   </nav>
+  <!-- Contact modal -->
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <a href="https://www.linkedin.com/in/tavind/" target="_blank" class="contact-item">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      <div class="contact-item">
+        <i class="fas fa-envelope"></i> vctavindk.uk@gmail.com
+      </div>
+    </div>
+  </div>
   <div class="about-content">
     <h1>About Me</h1>
     <p>Hello! I'm <b>Tavind Kumar</b>, a data analyst and business enthusiast with a passion for using data to drive decisions and uncover hidden value.</p>
@@ -48,5 +63,22 @@
     <p>Outside of work, I enjoy exploring new technologies, vegan cooking, and travelling with my wife. I'm based in Colchester, England, but originally from Selangor, Malaysia.</p>
     <p>Feel free to reach out if you'd like to collaborate or just connect!</p>
   </div>
+  <script>
+    const modal = document.getElementById('contactModal');
+    const contactLink = document.getElementById('contactLink');
+    const closeBtn = modal.querySelector('.close');
+    contactLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      modal.style.display = 'block';
+    });
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
