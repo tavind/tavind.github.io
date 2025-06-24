@@ -6,13 +6,28 @@
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
 <body>
   <!-- Navigation bar -->
   <nav class="navbar">
     <a href="about.html">About Me</a>
+    <a href="#" id="contactLink">Contact Me</a>
   </nav>
+  <!-- Contact modal -->
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <a href="https://www.linkedin.com/in/tavind/" target="_blank" class="contact-item">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      <div class="contact-item">
+        <i class="fas fa-envelope"></i> vctavindk.uk@gmail.com
+      </div>
+    </div>
+  </div>
   <!-- Sidebar -->
 <aside class="sidebar">
   <ul>
@@ -37,18 +52,35 @@
     <section class="projects-grid">
       <!-- Example project cards -->
       <div class="project-card">
-        <div class="project-title">Project 1: Sales Dashboard</div>
+        <div class="project-title"><span class="proj-icon">📊</span> Project 1: Sales Dashboard</div>
         <div class="project-desc">Developed a Power BI dashboard to visualise and monitor weekly sales trends for a major FMCG brand.</div>
       </div>
       <div class="project-card">
-        <div class="project-title">Project 2: Churn Analysis</div>
+        <div class="project-title"><span class="proj-icon">📈</span> Project 2: Churn Analysis</div>
         <div class="project-desc">Used Python and SQL to identify high-risk churn segments and recommended targeted retention strategies.</div>
       </div>
       <div class="project-card">
-        <div class="project-title">Project 3: University Funding Insights</div>
+        <div class="project-title"><span class="proj-icon">🗂️</span> Project 3: University Funding Insights</div>
         <div class="project-desc">Consulted for University of Essex, delivering actionable insights from grant and funding data.</div>
       </div>
     </section>
   </main>
+  <script>
+    const modal = document.getElementById('contactModal');
+    const contactLink = document.getElementById('contactLink');
+    const closeBtn = modal.querySelector('.close');
+    contactLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      modal.style.display = 'block';
+    });
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
