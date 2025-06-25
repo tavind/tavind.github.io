@@ -245,6 +245,7 @@ body {
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  background: #0F172A;
 }
 
 #bgDots::after {

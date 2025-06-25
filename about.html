@@ -38,24 +38,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
   <script>
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      VANTA.DOTS({
-        el: "#bgDots",
-        color: 0x14B8A6,
-        color2: 0x0A66C2,
-        backgroundColor: 0x0F172A,
-        size: 2.0,
-        spacing: 35.0,
-        showLines: true,
-        mouseControls: false,
-        touchControls: false,
-        gyroControls: false,
-        minHeight: 200.0,
-        minWidth: 200.0,
-        scale: 1.0,
-        scaleMobile: 1.0
-      });
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        VANTA.DOTS({
+          el: "#bgDots",
+          color: 0x14B8A6,
+          color2: 0x0A66C2,
+          backgroundColor: 0x0F172A,
+          size: 2.0,
+          spacing: 35.0,
+          showLines: true,
+          mouseControls: false,
+          touchControls: false,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          scale: 1.0,
+          scaleMobile: 1.0
+        });
+      }
+    });
   </script>
 </body>
 </html>
