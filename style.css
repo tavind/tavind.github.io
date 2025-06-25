@@ -239,6 +239,23 @@ body {
   }
 }
 
+/* Background Vanta container */
+#bgLines {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
 #bgLines canvas {
   opacity: 0.08 !important;
+}
+
+/* Ensure main sections render above the animated background */
+.hero,
+.stats-ribbon,
+.content,
+.projects-grid {
+  position: relative;
+  z-index: 1;
 }
