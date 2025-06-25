@@ -240,12 +240,13 @@ body {
 }
 
 /* Background Vanta container */
-#bgDots {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: #0F172A;
+#bgDots{
+  position:fixed;
+  top:120px;                /* push the entire grid 120 px lower */
+  left:0;right:0;bottom:0;  /* keep it full-width and anchored at the bottom */
+  z-index:-1;
+  pointer-events:none;
+  background:#0F172A;
 }
 
 #bgDots::after {
