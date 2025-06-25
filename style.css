@@ -208,12 +208,13 @@ body {
 }
 
 .modal-content {
-  background: var(--neutral-800);
+  background: #1E293B;
+  color: #F3F6F9;
+  border-radius: 1rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
   padding: 1.5rem;
-  border-radius: var(--border-radius-lg);
   width: 260px;
   margin: 15% auto;
-  box-shadow: var(--shadow-card);
 }
 
 .contact-item {
@@ -240,15 +241,9 @@ body {
 }
 
 /* Background Vanta container */
-#bgDots{
-  position:absolute;     /* keeps it inside the header only          */
-  top:0;                 /* start flush with the nav                 */
-  left:0;
-  width:100%;
-  height:50vh;           /* restrict to the upper half of screen     */
-  z-index:0;             /* render beneath the hero text/buttons     */
-  pointer-events:none;   /* don’t steal clicks from the hero buttons */
-  overflow:hidden;       /* clip particles that drift outside        */
+#bgTopo {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
-#bgDots canvas{opacity:.06!important;}      /* keep the dots subtle */
-header{position:relative; z-index:1;}       /* pull all hero content above */
