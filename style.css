@@ -240,15 +240,23 @@ body {
 }
 
 /* Background Vanta container */
-#bgLines {
+#bgDots {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
 }
 
-#bgLines canvas {
-  opacity: 0.08 !important;
+#bgDots::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+#bgDots canvas {
+  opacity: 0.06 !important;
 }
 
 /* Ensure main sections render above the animated background */
