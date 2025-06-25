@@ -258,6 +258,7 @@ body {
 
 #bgDots canvas {
   opacity: 0.06 !important;
+  transition: opacity .3s;
 }
 
 /* Ensure main sections render above the animated background */
