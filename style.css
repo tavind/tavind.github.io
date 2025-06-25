@@ -241,32 +241,14 @@ body {
 
 /* Background Vanta container */
 #bgDots{
-  position:fixed;
-  top:120px;                /* push the entire grid 120 px lower */
-  left:0;right:0;bottom:0;  /* keep it full-width and anchored at the bottom */
-  z-index:-1;
-  pointer-events:none;
-  background:#0F172A;
+  position:absolute;     /* keeps it inside the header only          */
+  top:0;                 /* start flush with the nav                 */
+  left:0;
+  width:100%;
+  height:50vh;           /* restrict to the upper half of screen     */
+  z-index:0;             /* render beneath the hero text/buttons     */
+  pointer-events:none;   /* don’t steal clicks from the hero buttons */
+  overflow:hidden;       /* clip particles that drift outside        */
 }
-
-#bgDots::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(4px);
-}
-
-#bgDots canvas {
-  opacity: 0.06 !important;
-  transition: opacity .3s;
-}
-
-/* Ensure main sections render above the animated background */
-.hero,
-.stats-ribbon,
-.content,
-.projects-grid {
-  position: relative;
-  z-index: 1;
-}
+#bgDots canvas{opacity:.06!important;}      /* keep the dots subtle */
+header{position:relative; z-index:1;}       /* pull all hero content above */
