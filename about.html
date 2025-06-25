@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div id="bgDots"></div>
+  <div id="bgTopo"></div>
   <nav class="navbar">
     <a href="index.html" class="logo">T</a>
     <a href="index.html">Home</a>
@@ -35,29 +35,24 @@
     <p>I focus on automation, insight generation and decision support. Trusted with high-value clients, I bring strong problem solving abilities and work well with cross-functional teams.</p>
   </main>
   <script src="contact.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js" defer></script>
-    <script>
-      window.addEventListener('load', () => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        if (window.vantaRef) window.vantaRef.destroy?.();
-        window.vantaRef = VANTA.DOTS({
-          el: "#bgDots",
-          color: 0x14B8A6,
-          color2: 0x0A66C2,
-          backgroundColor: 0x0F172A,
-          size: 2.0,
-          spacing: 35.0,
-          showLines: true,
-          mouseControls: false,
-          touchControls: false,
-          gyroControls: false,
-          minHeight: 200.0,
-          minWidth: 200.0,
-          scale: 1.0,
-          scaleMobile: 1.0
-        });
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js" defer></script>
+  <script>
+    window.addEventListener("load", () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      if (window.vantaRef) window.vantaRef.destroy?.();   // safety on hot reloads
+      window.vantaRef = VANTA.TOPOLOGY({
+        el: "#bgTopo",
+        backgroundColor: 0x0F172A,   // keep your dark base
+        color:            0x14B8A6,  // brand-teal mesh lines
+        mouseControls: false,
+        touchControls: false,
+        gyroControls: false,
+        scale: 1.0,
+        scaleMobile: 1.0
       });
+    });
   </script>
 </body>
 </html>
