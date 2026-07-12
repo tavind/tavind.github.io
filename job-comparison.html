@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Compare two jobs using salary, tax, pension, commuting, time, wellbeing and career factors." />
+  <title>Whole-Life Job Comparison</title>
+  <style>
+    :root {
+      --bg: #08141f;
+      --panel: #102538;
+      --panel-2: #152f46;
+      --text: #eef6fb;
+      --muted: #a9bfce;
+      --accent: #63d9ff;
+      --good: #78e0a5;
+      --warn: #ffd07a;
+      --bad: #ff8e8e;
+      --line: rgba(255,255,255,.11);
+      --shadow: 0 18px 45px rgba(0,0,0,.25);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top right, #163f59 0, var(--bg) 38%);
+      line-height: 1.45;
+    }
+    .wrap { width: min(1280px, calc(100% - 28px)); margin: 0 auto; padding: 28px 0 60px; }
+    header { display: flex; gap: 18px; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -.04em; }
+    h2, h3 { margin-top: 0; }
+    .subtitle { color: var(--muted); max-width: 760px; margin: 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    button {
+      border: 1px solid var(--line); background: var(--panel-2); color: var(--text); padding: 10px 13px;
+      border-radius: 10px; cursor: pointer; font-weight: 700;
+    }
+    button:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .primary { background: var(--accent); color: #05202c; border-color: transparent; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel { background: rgba(16,37,56,.92); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); }
+    .job-title { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .job-title input { font-size: 1.15rem; font-weight: 800; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    label { display: grid; gap: 5px; color: var(--muted); font-size: .83rem; }
+    input, select {
+      width: 100%; padding: 10px 11px; border-radius: 9px; border: 1px solid var(--line);
+      background: #091b2a; color: var(--text); font: inherit;
+    }
+    input:focus, select:focus { outline: 2px solid rgba(99,217,255,.35); border-color: var(--accent); }
+    .section-title { margin: 20px 0 10px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--accent); font-size: .95rem; }
+    .help { color: var(--muted); font-size: .78rem; margin: 7px 0 0; }
+    .results { margin-top: 16px; }
+    .cards { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+    .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .metric small { color: var(--muted); display: block; }
+    .metric strong { display: block; margin-top: 6px; font-size: 1.25rem; }
+    .comparison { margin-top: 16px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { padding: 11px 10px; border-bottom: 1px solid var(--line); text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+    .winner { color: var(--good); font-weight: 800; }
+    .loser { color: var(--bad); }
+    .verdict { margin-top: 16px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 14px; }
+    .verdict-main { background: linear-gradient(135deg, rgba(99,217,255,.15), rgba(120,224,165,.1)); }
+    .scoreline { height: 14px; background: #071522; border-radius: 99px; overflow: hidden; margin-top: 10px; }
+    .scorebar { height: 100%; width: 50%; background: linear-gradient(90deg, var(--accent), var(--good)); transition: width .25s; }
+    .note { color: var(--muted); font-size: .84rem; }
+    .weights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+    .weights input { padding: 8px; }
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+    .footer { margin-top: 24px; color: var(--muted); font-size: .78rem; }
+    @media (max-width: 900px) {
+      header, .grid, .verdict { grid-template-columns: 1fr; display: grid; }
+      .actions { justify-content: flex-start; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .form-grid, .weights, .cards { grid-template-columns: 1fr; }
+      .wrap { width: min(100% - 18px, 1280px); padding-top: 16px; }
+      .panel { padding: 14px; }
+    }
+    @media print {
+      body { background: white; color: black; }
+      .actions, .inputs-area, .footer { display: none !important; }
+      .panel, .metric { box-shadow: none; border: 1px solid #ccc; background: white; }
+      .results { margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Whole-Life Job Comparison</h1>
+      <p class="subtitle">Compare the money you keep, the time you give up, commuting costs, pension, leave, flexibility, wellbeing and career value—not just headline salary.</p>
+    </div>
+    <div class="actions">
+      <button id="swapBtn">Swap jobs</button>
+      <button id="resetBtn">Reset example</button>
+      <button id="saveBtn">Save locally</button>
+      <button onclick="window.print()">Print / PDF</button>
+    </div>
+  </header>
+
+  <section class="grid inputs-area">
+    <div class="panel job" data-job="a"></div>
+    <div class="panel job" data-job="b"></div>
+  </section>
+
+  <section class="panel inputs-area" style="margin-top:16px">
+    <h2>Personal priorities</h2>
+    <p class="help">Set each importance from 0 (ignore) to 10 (very important). Scores are comparative guides, not objective truth.</p>
+    <div class="weights" id="weights"></div>
+  </section>
+
+  <section class="results" aria-live="polite">
+    <div class="cards" id="headlineCards"></div>
+    <div class="panel comparison">
+      <h2>Detailed comparison</h2>
+      <table>
+        <thead><tr><th>Factor</th><th id="headA">Current job</th><th id="headB">New job</th><th>Difference B − A</th></tr></thead>
+        <tbody id="resultRows"></tbody>
+      </table>
+    </div>
+
+    <div class="verdict">
+      <div class="panel verdict-main">
+        <h2 id="verdictTitle">Calculating…</h2>
+        <p id="verdictText"></p>
+        <div class="scoreline"><div class="scorebar" id="scorebar"></div></div>
+        <p class="note" id="scoreText"></p>
+      </div>
+      <div class="panel">
+        <h3>Break-even salary</h3>
+        <p id="breakEven" style="font-size:1.45rem;font-weight:850;margin:.2rem 0"></p>
+        <p class="note">Estimated salary Job B would need to match Job A's annual disposable income plus your chosen value of extra time.</p>
+        <label style="margin-top:10px">Value of one personal hour (£)
+          <input id="hourValue" type="number" min="0" step="1" value="15" />
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer">Tax is an editable estimate using a simplified UK income-tax and employee-NI calculation. It excludes student loans, benefits, salary sacrifice and detailed pension tax treatment. Verify important decisions using official figures and actual ticket prices.</p>
+</div>
+
+<script>
+const defaults = {
+  a: { name:'Current Essex role', salary:43482, hours:36, days:2, commuteMinutes:60, commuteCost:0, weeks:46, pensionEmployee:6.5, pensionEmployer:18, leave:25, remote:8, flexibility:8, stress:5, career:6, security:8, fulfilment:7 },
+  b: { name:'Queen Mary role', salary:48000, hours:37, days:2, commuteMinutes:180, commuteCost:35, weeks:46, pensionEmployee:6.5, pensionEmployer:18, leave:25, remote:6, flexibility:6, stress:6, career:8, security:8, fulfilment:7 },
+  weights: { money:10, time:9, pension:5, leave:5, flexibility:8, stress:8, career:8, security:7, fulfilment:8 },
+  hourValue:15
+};
+
+const fields = [
+  ['Money','salary','Gross annual salary (£)','number',100],
+  ['Money','pensionEmployee','Employee pension contribution (%)','number',0.1],
+  ['Money','pensionEmployer','Employer pension contribution (%)','number',0.1],
+  ['Time & travel','hours','Contracted hours per week','number',0.5],
+  ['Time & travel','days','Campus days per week','number',0.5],
+  ['Time & travel','commuteMinutes','Return commute per campus day (minutes)','number',5],
+  ['Time & travel','commuteCost','Return commute cost per campus day (£)','number',1],
+  ['Time & travel','weeks','Working weeks requiring travel','number',1],
+  ['Benefits','leave','Annual leave days','number',1],
+  ['Quality scores','remote','Remote-working quality (0–10)','number',1],
+  ['Quality scores','flexibility','Flexibility (0–10)','number',1],
+  ['Quality scores','stress','Expected stress (0–10; lower is better)','number',1],
+  ['Quality scores','career','Career progression (0–10)','number',1],
+  ['Quality scores','security','Job security (0–10)','number',1],
+  ['Quality scores','fulfilment','Interest and fulfilment (0–10)','number',1]
+];
+
+const weightLabels = {
+  money:'Disposable money', time:'Personal time', pension:'Pension value', leave:'Annual leave', flexibility:'Flexibility / remote work', stress:'Low stress', career:'Career progression', security:'Job security', fulfilment:'Interest / fulfilment'
+};
+
+let state = structuredClone(defaults);
+const fmtGBP = n => new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0}).format(n || 0);
+const fmt = (n,d=1) => Number(n||0).toLocaleString('en-GB',{maximumFractionDigits:d});
+
+function renderForms(){
+  document.querySelectorAll('.job').forEach(el => {
+    const key=el.dataset.job, job=state[key];
+    let last='';
+    el.innerHTML=`<div class="job-title"><input data-key="name" value="${escapeHtml(job.name)}" aria-label="Job name"></div>`;
+    fields.forEach(([section,k,label,type,step])=>{
+      if(section!==last){ el.insertAdjacentHTML('beforeend',`<h3 class="section-title">${section}</h3><div class="form-grid" data-section="${section}"></div>`); last=section; }
+      const grid=[...el.querySelectorAll('[data-section]')].at(-1);
+      grid.insertAdjacentHTML('beforeend',`<label>${label}<input data-key="${k}" type="${type}" step="${step}" value="${job[k]}" ${section==='Quality scores'?'min="0" max="10"':''}></label>`);
+    });
+    el.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{ const k=e.target.dataset.key; state[key][k]=k==='name'?e.target.value:Number(e.target.value); calculate(); }));
+  });
+  const w=document.getElementById('weights');
+  w.innerHTML=Object.entries(weightLabels).map(([k,l])=>`<label>${l}<input data-weight="${k}" type="number" min="0" max="10" step="1" value="${state.weights[k]}"></label>`).join('');
+  w.querySelectorAll('input').forEach(i=>i.addEventListener('input',e=>{state.weights[e.target.dataset.weight]=Number(e.target.value); calculate();}));
+  document.getElementById('hourValue').value=state.hourValue;
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+
+function taxEstimate(gross){
+  const allowance = gross > 100000 ? Math.max(0,12570-(gross-100000)/2) : 12570;
+  const taxable=Math.max(0,gross-allowance);
+  const basic=Math.min(taxable,37700)*.20;
+  const higher=Math.min(Math.max(0,taxable-37700),74870)*.40;
+  const additional=Math.max(0,taxable-112570)*.45;
+  const ni=Math.min(Math.max(0,gross-12570),37700)*.08 + Math.max(0,gross-50270)*.02;
+  return {tax:basic+higher+additional, ni};
+}
+
+function metrics(j){
+  const t=taxEstimate(j.salary);
+  const pensionEmployee=j.salary*j.pensionEmployee/100;
+  const employerPension=j.salary*j.pensionEmployer/100;
+  const travel=j.commuteCost*j.days*j.weeks;
+  const takeHome=j.salary-t.tax-t.ni-pensionEmployee;
+  const disposable=takeHome-travel;
+  const annualWork=j.hours*52;
+  const annualCommute=j.commuteMinutes/60*j.days*j.weeks;
+  const committed=annualWork+annualCommute;
+  return {...j,...t,pensionEmployee,employerPension,travel,takeHome,disposable,annualWork,annualCommute,committed,grossPerHour:j.salary/committed,disposablePerHour:disposable/committed,totalReward:j.salary+employerPension};
+}
+
+function normalisePair(a,b,higherBetter=true){
+  if(a===b) return [5,5];
+  const lo=Math.min(a,b), hi=Math.max(a,b), spread=hi-lo || 1;
+  let sa=3+4*(a-lo)/spread, sb=3+4*(b-lo)/spread;
+  if(!higherBetter){sa=10-sa;sb=10-sb;}
+  return [sa,sb];
+}
+
+function qualityScore(ma,mb){
+  const w=state.weights;
+  const money=normalisePair(ma.disposable,mb.disposable,true);
+  const time=normalisePair(ma.committed,mb.committed,false);
+  const pension=normalisePair(ma.employerPension,mb.employerPension,true);
+  const leave=normalisePair(ma.leave,mb.leave,true);
+  const pairs={money,time,pension,leave,flexibility:[ma.flexibility,mb.flexibility],stress:[10-ma.stress,10-mb.stress],career:[ma.career,mb.career],security:[ma.security,mb.security],fulfilment:[ma.fulfilment,mb.fulfilment]};
+  let sa=0,sb=0,total=0;
+  Object.entries(pairs).forEach(([k,v])=>{ const weight=Number(w[k]||0); sa+=v[0]*weight;sb+=v[1]*weight;total+=weight; });
+  return total ? [sa/total*10,sb/total*10] : [50,50];
+}
+
+function diffClass(v,goodWhenPositive=true){ if(Math.abs(v)<.01)return ''; return (v>0)===goodWhenPositive?'good':'bad'; }
+function row(label,a,b,diff,formatter=fmtGBP,goodWhenPositive=true){
+  const winA=goodWhenPositive?a>b:a<b, winB=goodWhenPositive?b>a:b<a;
+  return `<tr><td>${label}</td><td class="${winA?'winner':''}">${formatter(a)}</td><td class="${winB?'winner':''}">${formatter(b)}</td><td class="${diffClass(diff,goodWhenPositive)}">${diff>0?'+':''}${formatter(diff)}</td></tr>`;
+}
+
+function estimateBreakEven(ma,mb){
+  const target=ma.disposable + Math.max(0,mb.committed-ma.committed)*state.hourValue;
+  let lo=0,hi=200000;
+  for(let i=0;i<60;i++){
+    const mid=(lo+hi)/2;
+    const test=metrics({...state.b,salary:mid});
+    if(test.disposable<target) lo=mid; else hi=mid;
+  }
+  return hi;
+}
+
+function calculate(){
+  const a=metrics(state.a), b=metrics(state.b);
+  document.getElementById('headA').textContent=a.name;
+  document.getElementById('headB').textContent=b.name;
+  const netDiff=b.disposable-a.disposable;
+  const timeDiff=b.committed-a.committed;
+  const [sa,sb]=qualityScore(a,b);
+  document.getElementById('headlineCards').innerHTML=`
+    <div class="metric"><small>Gross salary difference</small><strong class="${diffClass(b.salary-a.salary)}">${fmtGBP(b.salary-a.salary)}</strong></div>
+    <div class="metric"><small>Disposable income difference</small><strong class="${diffClass(netDiff)}">${fmtGBP(netDiff)}</strong></div>
+    <div class="metric"><small>Extra committed time</small><strong class="${diffClass(timeDiff,false)}">${timeDiff>0?'+':''}${fmt(timeDiff)} hrs/year</strong></div>
+    <div class="metric"><small>Weighted score</small><strong>${fmt(sa)} vs ${fmt(sb)}</strong></div>`;
+
+  document.getElementById('resultRows').innerHTML=
+    row('Gross annual salary',a.salary,b.salary,b.salary-a.salary)+
+    row('Estimated take-home after employee pension',a.takeHome,b.takeHome,b.takeHome-a.takeHome)+
+    row('Annual commuting cost',a.travel,b.travel,b.travel-a.travel,fmtGBP,false)+
+    row('Disposable income after commute',a.disposable,b.disposable,netDiff)+
+    row('Employer pension contribution',a.employerPension,b.employerPension,b.employerPension-a.employerPension)+
+    row('Total reward: salary + employer pension',a.totalReward,b.totalReward,b.totalReward-a.totalReward)+
+    row('Annual commuting hours',a.annualCommute,b.annualCommute,b.annualCommute-a.annualCommute,n=>`${fmt(n)} hrs`,false)+
+    row('Annual work + commute hours',a.committed,b.committed,timeDiff,n=>`${fmt(n)} hrs`,false)+
+    row('Gross salary per committed hour',a.grossPerHour,b.grossPerHour,b.grossPerHour-a.grossPerHour,n=>fmtGBP(n))+
+    row('Disposable income per committed hour',a.disposablePerHour,b.disposablePerHour,b.disposablePerHour-a.disposablePerHour,n=>fmtGBP(n))+
+    row('Annual leave',a.leave,b.leave,b.leave-a.leave,n=>`${fmt(n)} days`)+
+    row('Weighted whole-life score',sa,sb,sb-sa,n=>fmt(n),true);
+
+  const winner=sb>sa?b:a, margin=Math.abs(sb-sa);
+  document.getElementById('verdictTitle').textContent=margin<3?'The jobs are closely matched':`${winner.name} currently ranks higher`;
+  const moneySentence=netDiff>=0?`${b.name} leaves about ${fmtGBP(netDiff)} more disposable income per year after the entered commute cost.`:`${b.name} leaves about ${fmtGBP(Math.abs(netDiff))} less disposable income per year after the entered commute cost.`;
+  const timeSentence=timeDiff>0?` It also uses about ${fmt(timeDiff)} additional hours of work and commuting each year.`:` It saves about ${fmt(Math.abs(timeDiff))} hours each year.`;
+  document.getElementById('verdictText').textContent=moneySentence+timeSentence+` Your priority-weighted scores are ${fmt(sa)} for ${a.name} and ${fmt(sb)} for ${b.name}.`;
+  document.getElementById('scorebar').style.width=`${Math.max(5,Math.min(95,sb/(sa+sb)*100))}%`;
+  document.getElementById('scoreText').textContent=`Left favours ${a.name}; right favours ${b.name}. Change the priority weights to reflect what matters to you.`;
+  document.getElementById('breakEven').textContent=fmtGBP(estimateBreakEven(a,b));
+}
+
+function bindActions(){
+  document.getElementById('swapBtn').onclick=()=>{ [state.a,state.b]=[state.b,state.a]; renderForms(); calculate(); };
+  document.getElementById('resetBtn').onclick=()=>{ state=structuredClone(defaults); renderForms(); calculate(); };
+  document.getElementById('saveBtn').onclick=()=>{ localStorage.setItem('wholeLifeJobComparison',JSON.stringify(state)); const btn=document.getElementById('saveBtn');btn.textContent='Saved ✓';setTimeout(()=>btn.textContent='Save locally',1200); };
+  document.getElementById('hourValue').addEventListener('input',e=>{state.hourValue=Number(e.target.value);calculate();});
+}
+
+try { const saved=JSON.parse(localStorage.getItem('wholeLifeJobComparison')); if(saved) state={...structuredClone(defaults),...saved,weights:{...defaults.weights,...saved.weights}}; } catch(e) {}
+renderForms(); bindActions(); calculate();
+</script>
+</body>
+</html>
